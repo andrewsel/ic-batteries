@@ -1,0 +1,11 @@
+{
+  "hash": "b10af58a",
+  "browserHash": "e3043227",
+  "optimized": {
+    "buffer": {
+      "file": "/Users/andrewsellen/Documents/andrew_projects/ic-batteries/.vite/buffer.js",
+      "src": "/Users/andrewsellen/Documents/andrew_projects/ic-batteries/node_modules/buffer/index.js",
+      "needsInterop": true
+    }
+  }
+}

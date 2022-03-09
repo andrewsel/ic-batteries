@@ -5,39 +5,114 @@
     connectPlug,
     getTotalBootcampTokens,
     sendBootcampTokens,
-  } from "./auth/plug.js"
+  } from "./scripts/plug.js"
+  import { getQueryParam } from "./scripts/getQueryParam.js"
   // @ts-ignore
   import { nft } from "canisters/nft"
   import { onMount } from "svelte"
-  import Header from "./Header.svelte"
-  import Designer from "./Designer.svelte"
+  import Header from "./components/Header.svelte"
+  import Mint from "./screens/Mint.svelte"
 
+  const userStates = {
+    NO_PLUG: "NO_PLUG",
+    PLUG_NOT_CONNECTED: "PLUG_NOT_CONNECTED",
+    PAYMENT_NOT_RECEIVED: "PAYMENT_NOT_RECEIVED",
+    PAYMENT_RECEIVED: "PAYMENT_RECEIVED",
+    NFT_MINTED: "NFT_MINTED",
+  }
+
+  const screens = {
+    LOADING: "LOADING",
+    NFT: "NFT",
+    MINT: "MINT",
+    GALLERY: "GALLERY",
+    VIP: "VIP",
+    ABOUT: "ABOUT",
+  }
+
+  let screen = screens.LOADING
   let welcome = "loading..."
-  let plugInstalled = false
-  let plugConnected = false
-  let principalId = false
+  let principalId = ""
+  let userState = userStates.NO_PLUG
 
-  // const sayHello = async () => {
-  //   const res = await nft.sayHello()
-  //   welcome = res.toString()
-  // }
+  const sayHello = async () => {
+    const res = await nft.sayHello()
+    const name = await nft.name()
+    welcome = res + name
+  }
 
   async function handleConnectPlug() {
-    plugConnected = await connectPlug()
-    principalId = await getPrincipal()
+    const plugConnected = await connectPlug()
+    if (plugConnected) {
+      principalId = await getPrincipal()
+      userState = await getUserState()
+    }
   }
 
-  async function checkIfPlugInstalled() {
+  async function handlePayment() {
+    const tokensSent = await sendBootcampTokens()
+    if (tokensSent) {
+      userState = userStates.PAYMENT_RECEIVED
+    }
+  }
+
+  async function isPaymentReceived() {
+    return false
+  }
+
+  async function isNftMinted() {
+    return false
+  }
+
+  async function getUserState() {
     // @ts-ignore
-    plugInstalled = window.ic && window.ic.plug ? true : false
+    if (!window.ic || !window.ic.plug) {
+      return userStates.NO_PLUG
+    }
+    if (!principalId) {
+      return userStates.PLUG_NOT_CONNECTED
+    }
+    const nftMinted = await isNftMinted()
+    if (nftMinted) {
+      return userStates.NFT_MINTED
+    }
+    const paymentReceived = await isPaymentReceived()
+    if (paymentReceived) {
+      return userStates.PAYMENT_RECEIVED
+    } else {
+      return userStates.PAYMENT_NOT_RECEIVED
+    }
   }
 
-  onMount(checkIfPlugInstalled)
+  async function doOnMount() {
+    const tokenId = getQueryParam("tokenid")
+    if (tokenId) {
+      console.log(tokenId)
+      screen = screens.NFT
+    } else {
+      userState = await getUserState()
+      screen = screens.MINT
+    }
+  }
+
+  $: console.log(screen)
+
+  onMount(doOnMount)
 </script>
 
-<Header {principalId} />
-<main>
-  <p>
+<div class="container">
+  {#if screen == screens.LOADING}
+    <div class="loading">Loading...</div>
+  {:else if screen == screens.NFT}
+    <div class="nft">Todo: Show NFT</div>
+  {:else}
+    <!-- else content here -->
+
+    <Header {principalId} {handleConnectPlug} />
+    <main>
+      {welcome}
+      <Mint {userState} {userStates} {handleConnectPlug} {handlePayment} />
+      <!-- <p>
     Plug Installed: {plugInstalled}
   </p>
   <p>
@@ -48,19 +123,30 @@
   </p>
   <button on:click={handleConnectPlug}> Connect Plug Wallet </button>
   <button on:click={getTotalBootcampTokens}> Get Total </button>
-  <button on:click={sendBootcampTokens}> Send Tokens </button>
-  <!-- <Designer /> -->
-</main>
+  <button on:click={sendBootcampTokens}> Send Tokens </button> -->
+      <!-- <Designer /> -->
+    </main>
+  {/if}
+</div>
 
 <style global lang="scss">
-  body {
-    background-color: red;
-    padding: 200px;
+  @use "./styles/global.scss" as *;
+
+  .container {
+    max-width: 1440px;
+    margin: 0 auto;
+    .loading,
+    .nft {
+      color: white;
+      display: flex;
+      height: 100vh;
+      width: 1005;
+      justify-content: center;
+      align-items: center;
+    }
   }
 
-  @media (max-width: 600px) {
-    body {
-      padding: 20px;
-    }
+  main {
+    color: white;
   }
 </style>

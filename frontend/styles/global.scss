@@ -1,12 +1,8 @@
 @use "reset.scss" as *;
 
-body {
-  background-color: red;
-  padding: 200px;
-}
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap");
 
-@media (max-width: 600px) {
-  body {
-    padding: 20px;
-  }
+body {
+  font-family: "Raleway", sans-serif;
+  background-color: black;
 }

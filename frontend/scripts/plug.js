@@ -76,11 +76,13 @@ export async function sendBootcampTokens() {
       from_subaccount: [],
       created_at_time: [],
       amount: {
-        e8s: 200000000,
+        e8s: 10000000000,
       },
     })
-    return response
+    console.log(response)
+    return true
   } catch (e) {
     console.log(e)
+    return false
   }
 }

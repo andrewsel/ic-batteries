@@ -9,7 +9,8 @@
 
 <section>
   <div class="next-action">
-    {#if userState == userStates.NO_PLUG}
+    <Designer />
+    <!-- {#if userState == userStates.NO_PLUG}
       <p>To get started, you need to install plug 👇</p>
 
       <button>Install Plug</button>
@@ -26,7 +27,7 @@
       <button>View your NFT in the Gallery</button>
     {:else}
       Something went wrong...
-    {/if}
+    {/if} -->
   </div>
 </section>
 

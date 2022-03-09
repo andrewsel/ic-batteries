@@ -106,25 +106,10 @@
   {:else if screen == screens.NFT}
     <div class="nft">Todo: Show NFT</div>
   {:else}
-    <!-- else content here -->
-
     <Header {principalId} {handleConnectPlug} />
     <main>
-      {welcome}
+      <!-- {welcome} -->
       <Mint {userState} {userStates} {handleConnectPlug} {handlePayment} />
-      <!-- <p>
-    Plug Installed: {plugInstalled}
-  </p>
-  <p>
-    Plug Wallet Connected: {plugConnected}
-  </p>
-  <p>
-    Logged in: {principalId}
-  </p>
-  <button on:click={handleConnectPlug}> Connect Plug Wallet </button>
-  <button on:click={getTotalBootcampTokens}> Get Total </button>
-  <button on:click={sendBootcampTokens}> Send Tokens </button> -->
-      <!-- <Designer /> -->
     </main>
   {/if}
 </div>

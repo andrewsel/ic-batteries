@@ -16,8 +16,7 @@
   const userStates = {
     NO_PLUG: "NO_PLUG",
     PLUG_NOT_CONNECTED: "PLUG_NOT_CONNECTED",
-    PAYMENT_NOT_RECEIVED: "PAYMENT_NOT_RECEIVED",
-    PAYMENT_RECEIVED: "PAYMENT_RECEIVED",
+    NFT_NOT_MINTED: "NFT_NOT_MINTED",
     NFT_MINTED: "NFT_MINTED",
   }
 
@@ -49,17 +48,6 @@
     }
   }
 
-  async function handlePayment() {
-    const tokensSent = await sendBootcampTokens()
-    if (tokensSent) {
-      userState = userStates.PAYMENT_RECEIVED
-    }
-  }
-
-  async function isPaymentReceived() {
-    return false
-  }
-
   async function isNftMinted() {
     return false
   }
@@ -75,12 +63,8 @@
     const nftMinted = await isNftMinted()
     if (nftMinted) {
       return userStates.NFT_MINTED
-    }
-    const paymentReceived = await isPaymentReceived()
-    if (paymentReceived) {
-      return userStates.PAYMENT_RECEIVED
     } else {
-      return userStates.PAYMENT_NOT_RECEIVED
+      return userStates.NFT_NOT_MINTED
     }
   }
 
@@ -109,7 +93,7 @@
     <Header {principalId} {handleConnectPlug} />
     <main>
       <!-- {welcome} -->
-      <Mint {userState} {userStates} {handleConnectPlug} {handlePayment} />
+      <Mint {userState} {userStates} {handleConnectPlug} />
     </main>
   {/if}
 </div>

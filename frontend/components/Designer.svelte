@@ -1,15 +1,29 @@
 <script>
-  import AccordianItem from "./battery-components/AccordianItem.svelte"
+  import AccordianGroup from "./battery-components/AccordianGroup.svelte"
   import Body from "./battery-components/Body.svelte"
   import Eyes from "./battery-components/Eyes.svelte"
-  import Eyes_1 from "./battery-components/Eyes_1.svelte"
-  import Eyes_2 from "./battery-components/Eyes_2.svelte"
+  import Hands from "./battery-components/Hands.svelte"
+  import Reset from "./icons/reset.svelte"
 
   let itemSets = {
     Eyes: {
-      numOptions: 2,
+      numOptions: 3,
       selected: 1,
     },
+    Hands: {
+      numOptions: 3,
+      selected: 1,
+    },
+  }
+
+  function randomReset() {
+    const updatedSet = { ...itemSets }
+    for (const [group, details] of Object.entries(updatedSet)) {
+      updatedSet[group].selected = Math.floor(
+        Math.random() * details.numOptions + 1,
+      )
+    }
+    itemSets = { ...updatedSet }
   }
 
   function updateSelected(itemSet, itemNum) {
@@ -23,40 +37,77 @@
   <section>
     <div id="col1">
       <Body>
-        <Eyes selected={itemSets.Eyes.selected} />
+        <Eyes optionNumber={itemSets.Eyes.selected} />
+        <Hands optionNumber={itemSets.Hands.selected} />
       </Body>
     </div>
     <div id="col2">
       <h1>Design your IC Battery</h1>
-      <button>Random Reset</button>
+      <div class="buttons">
+        <button id="reset" on:click={randomReset}>
+          <Reset />
+          <div>Random Reset</div>
+        </button>
+        <button id="mint" on:click={randomReset}>
+          <div>I'm Ready To Mint →</div>
+        </button>
+      </div>
+
       <div class="accordian">
         {#each Object.entries(itemSets) as itemSet}
-          <div class="heading">{itemSet[0]}</div>
-          <div class="items">
-            {#each Array(itemSet[1].numOptions) as item, index}
-              <div
-                class="item"
-                on:click={() => updateSelected(itemSet[0], index + 1)}
-              >
-                <AccordianItem
-                  itemSet={itemSet[0]}
-                  index={index + 1}
-                  selected={itemSet[1].selected == index + 1}
-                />
-              </div>
-            {/each}
-          </div>
+          <AccordianGroup
+            groupName={itemSet[0]}
+            numOptions={itemSet[1].numOptions}
+            selectedItem={itemSet[1].selected}
+            {updateSelected}
+          />
         {/each}
       </div>
     </div>
   </section>
 </div>
 
-<style>
+<style lang="scss">
   .slim-container {
     width: 100%;
     max-width: 900px;
     margin: 0 auto;
+  }
+
+  .buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 20px;
+  }
+
+  button {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    border: 1px solid white;
+    border-radius: 12px;
+    padding: 6px;
+    margin: 20px 0 40px 0;
+    cursor: pointer;
+    &#reset {
+      border-color: white;
+      color: white;
+      background-color: transparent;
+      &:hover {
+        background-color: #222222;
+      }
+    }
+    &#mint {
+      border-color: #74ff75;
+      color: black;
+      background-color: #74ff75;
+      &:hover {
+        background-color: #51ff51;
+      }
+    }
   }
 
   section {
@@ -70,12 +121,5 @@
     font-size: 30px;
     color: #fa51d3;
     text-transform: uppercase;
-  }
-
-  .items {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-column-gap: 20px;
-    grid-row-gap: 20px;
   }
 </style>

@@ -1,10 +1,17 @@
 <script>
   import Designer from "../components/Designer.svelte"
+  import { sendBootcampTokens } from "../scripts/plug.js"
 
   export let userState = ""
   export let userStates = {}
-  export let handlePayment
   export let handleConnectPlug
+
+  async function handlePayment() {
+    const tokensSent = await sendBootcampTokens()
+    if (tokensSent) {
+      // Mint NFT
+    }
+  }
 </script>
 
 <section>

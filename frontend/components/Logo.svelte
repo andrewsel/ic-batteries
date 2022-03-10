@@ -1,4 +1,12 @@
+<script>
+  export let updateScreen
+  export let screens
+</script>
+
 <svg
+  on:click={() => {
+    updateScreen(screens.HOME)
+  }}
   width="273"
   height="32"
   viewBox="0 0 273 32"
@@ -10,3 +18,9 @@
     fill="white"
   />
 </svg>
+
+<style>
+  svg {
+    cursor: pointer;
+  }
+</style>

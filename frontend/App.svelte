@@ -11,17 +11,11 @@
   import { nft } from "canisters/nft"
   import { onMount } from "svelte"
   import Header from "./components/Header.svelte"
+  import Home from "./screens/Home.svelte"
   import Mint from "./screens/Mint.svelte"
 
-  const userStates = {
-    NO_PLUG: "NO_PLUG",
-    PLUG_NOT_CONNECTED: "PLUG_NOT_CONNECTED",
-    NFT_NOT_MINTED: "NFT_NOT_MINTED",
-    NFT_MINTED: "NFT_MINTED",
-  }
-
   const screens = {
-    LOADING: "LOADING",
+    HOME: "HOME",
     NFT: "NFT",
     MINT: "MINT",
     GALLERY: "GALLERY",
@@ -29,10 +23,9 @@
     ABOUT: "ABOUT",
   }
 
-  let screen = screens.LOADING
+  let screen = screens.MINT
   let welcome = "loading..."
   let principalId = ""
-  let userState = userStates.NO_PLUG
 
   const sayHello = async () => {
     const res = await nft.sayHello()
@@ -40,32 +33,19 @@
     welcome = res + name
   }
 
+  async function setPrincipalId(id) {
+    principalId = id
+  }
+
   async function handleConnectPlug() {
     const plugConnected = await connectPlug()
     if (plugConnected) {
       principalId = await getPrincipal()
-      userState = await getUserState()
     }
   }
 
-  async function isNftMinted() {
-    return false
-  }
-
-  async function getUserState() {
-    // @ts-ignore
-    if (!window.ic || !window.ic.plug) {
-      return userStates.NO_PLUG
-    }
-    if (!principalId) {
-      return userStates.PLUG_NOT_CONNECTED
-    }
-    const nftMinted = await isNftMinted()
-    if (nftMinted) {
-      return userStates.NFT_MINTED
-    } else {
-      return userStates.NFT_NOT_MINTED
-    }
+  function updateScreen(newScreen) {
+    screen = newScreen
   }
 
   async function doOnMount() {
@@ -73,13 +53,8 @@
     if (tokenId) {
       console.log(tokenId)
       screen = screens.NFT
-    } else {
-      userState = await getUserState()
-      screen = screens.MINT
     }
   }
-
-  $: console.log(screen)
 
   onMount(doOnMount)
 </script>
@@ -90,10 +65,21 @@
   {:else if screen == screens.NFT}
     <div class="nft">Todo: Show NFT</div>
   {:else}
-    <Header {principalId} {handleConnectPlug} />
+    <Header
+      {principalId}
+      {handleConnectPlug}
+      {updateScreen}
+      {screens}
+      {screen}
+    />
     <main>
-      <!-- {welcome} -->
-      <Mint {userState} {userStates} {handleConnectPlug} />
+      {#if screen == screens.HOME}
+        <Home {updateScreen} {screens} />
+      {:else if screen == screens.MINT}
+        <Mint {handleConnectPlug} {principalId} {updateScreen} {screens} />
+      {:else}
+        Page not found
+      {/if}
     </main>
   {/if}
 </div>

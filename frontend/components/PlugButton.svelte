@@ -27,9 +27,7 @@
     display: flex;
     flex-direction: row;
     padding: 12px 36px;
-    &:hover {
-      cursor: pointer;
-    }
+    cursor: pointer;
   }
 
   div {

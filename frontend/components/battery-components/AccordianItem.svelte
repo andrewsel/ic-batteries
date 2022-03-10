@@ -21,7 +21,7 @@
 {#if itemSet == "Hands"}
   <svg
     class={selected ? "selected" : ""}
-    viewBox="240 100 500 500"
+    viewBox="50 50 900 900"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >

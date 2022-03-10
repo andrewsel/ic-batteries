@@ -1,74 +1,148 @@
 <script>
-  import Designer from "../components/Designer.svelte"
-  import { sendBootcampTokens } from "../scripts/plug.js"
+  import AccordianGroup from "../components/battery-components/AccordianGroup.svelte"
+  import Body from "../components/battery-components/Body.svelte"
+  import Eyes from "../components/battery-components/Eyes.svelte"
+  import Hands from "../components/battery-components/Hands.svelte"
+  import Reset from "../components/icons/reset.svelte"
+  import Checkout from "../components/Checkout.svelte"
 
-  export let userState = ""
-  export let userStates = {}
   export let handleConnectPlug
+  export let principalId
+  export let updateScreen
+  export let screens
 
-  async function handlePayment() {
-    const tokensSent = await sendBootcampTokens()
-    if (tokensSent) {
-      // Mint NFT
+  let itemSets = {
+    Eyes: {
+      numOptions: 3,
+      selected: 1,
+    },
+    Hands: {
+      numOptions: 3,
+      selected: 1,
+    },
+  }
+
+  function randomReset() {
+    const updatedSet = { ...itemSets }
+    for (const [group, details] of Object.entries(updatedSet)) {
+      updatedSet[group].selected = Math.floor(
+        Math.random() * details.numOptions + 1,
+      )
     }
+    itemSets = { ...updatedSet }
+  }
+
+  function updateSelected(itemSet, itemNum) {
+    const updatedSet = { ...itemSets }
+    updatedSet[itemSet].selected = itemNum
+    itemSets = { ...updatedSet }
+  }
+
+  let readyToMint = true
+
+  function backToDesigner() {
+    readyToMint = false
   }
 </script>
 
-<section>
-  <div class="next-action">
-    <Designer />
-    <!-- {#if userState == userStates.NO_PLUG}
-      <p>To get started, you need to install plug 👇</p>
+<div class="slim-container">
+  <section>
+    <div id="col1">
+      <Body>
+        <Eyes optionNumber={itemSets.Eyes.selected} />
+        <Hands optionNumber={itemSets.Hands.selected} />
+      </Body>
+    </div>
+    <div id="col2">
+      {#if readyToMint}
+        <Checkout
+          {handleConnectPlug}
+          {principalId}
+          {backToDesigner}
+          {updateScreen}
+          {screens}
+          {itemSets}
+        />
+      {:else}
+        <h1>Design your IC Battery</h1>
+        <div class="buttons">
+          <button id="reset" on:click={randomReset}>
+            <Reset />
+            <div>Random Reset</div>
+          </button>
+          <button id="mint" on:click={() => (readyToMint = true)}>
+            <div>I'm Ready To Mint →</div>
+          </button>
+        </div>
 
-      <button>Install Plug</button>
-    {:else if userState == userStates.PLUG_NOT_CONNECTED}
-      <button on:click={handleConnectPlug}>Connect Plug Wallet</button>
-    {:else if userState == userStates.PAYMENT_NOT_RECEIVED}
-      <p>🎉 Your plug wallet is connected</p>
-      <p>Next step: pay 100 Bootcamp Tokens to unlock minter</p>
-      <button on:click={handlePayment}>Pay 100 Bootcamp Tokens</button>
-    {:else if userState == userStates.PAYMENT_RECEIVED}
-      <Designer />
-    {:else if userState == userStates.NFT_MINTED}
-      <p>🥳 You've minted a IC Batteries NFT</p>
-      <button>View your NFT in the Gallery</button>
-    {:else}
-      Something went wrong...
-    {/if} -->
-  </div>
-</section>
+        <div class="accordian">
+          {#each Object.entries(itemSets) as itemSet}
+            <AccordianGroup
+              groupName={itemSet[0]}
+              numOptions={itemSet[1].numOptions}
+              selectedItem={itemSet[1].selected}
+              {updateSelected}
+            />
+          {/each}
+        </div>
+      {/if}
+    </div>
+  </section>
+</div>
 
 <style lang="scss">
-  section {
-    padding: 40px;
-    color: white;
-  }
-
-  .next-action {
+  .slim-container {
     width: 100%;
-    min-height: 50vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    max-width: 900px;
+    margin: 0 auto;
   }
 
-  p {
-    text-align: center;
+  .buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 20px;
+    margin: 30px 0 40px 0;
   }
 
   button {
-    margin-top: 20px;
-    background-color: #74ff75;
-    border: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    border: 1px solid white;
     border-radius: 12px;
-    width: 460px;
-    max-width: 100%;
-    font-weight: bold;
-    font-size: 30px;
-    padding: 12px 20px;
-    &:hover {
-      cursor: pointer;
+    padding: 6px;
+    cursor: pointer;
+    &#reset {
+      border-color: white;
+      color: white;
+      background-color: transparent;
+      &:hover {
+        background-color: #222222;
+      }
     }
+    &#mint {
+      border-color: #74ff75;
+      color: black;
+      background-color: #74ff75;
+      &:hover {
+        background-color: #51ff51;
+      }
+    }
+  }
+
+  section {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 40px;
+  }
+
+  h1 {
+    font-size: 30px;
+    color: #fa51d3;
+    text-transform: uppercase;
   }
 </style>

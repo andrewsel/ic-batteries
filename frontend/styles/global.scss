@@ -6,3 +6,12 @@ body {
   font-family: "Raleway", sans-serif;
   background-color: black;
 }
+
+h1 {
+  color: #74ff75;
+  font-size: 30px;
+  text-transform: uppercase;
+  &.pink {
+    color: #fa51d3;
+  }
+}

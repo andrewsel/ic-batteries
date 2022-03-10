@@ -1,8 +1,9 @@
 // Canister Ids
 const bootcampCanisterId = "yeeiw-3qaaa-aaaah-qcvmq-cai"
+const nftCanisterId = "rkp4c-7iaaa-aaaaa-aaaca-cai"
 
 // Whitelist
-const whitelist = [bootcampCanisterId]
+const whitelist = [bootcampCanisterId, nftCanisterId]
 
 export async function isWalletConnected() {
   // @ts-ignore
@@ -85,4 +86,50 @@ export async function sendBootcampTokens() {
     console.log(e)
     return false
   }
+}
+
+const nftPartialInterfaceFactory = ({ IDL }) => {
+  const BlockHeight = IDL.Nat64
+  const NFTs = IDL.Vec(
+    IDL.Record({
+      tokenId: IDL.Nat,
+      principalId: IDL.Text,
+    }),
+  )
+  const MintArgs = IDL.Record({
+    tokenId: IDL.Nat,
+    uri: IDL.Text,
+  })
+  return IDL.Service({
+    allMinted: IDL.Func([], [NFTs], ["query"]),
+    mint: IDL.Func([MintArgs], [BlockHeight], []),
+  })
+}
+
+export async function mint() {
+  // @ts-ignore
+  const nftTokenActor = await window.ic.plug.createActor({
+    canisterId: nftCanisterId,
+    interfaceFactory: nftPartialInterfaceFactory,
+  })
+  try {
+    await nftTokenActor.mint({
+      tokenId: 22,
+      uri: "http://localhost:3000?tokenid=22",
+    })
+    return true
+  } catch (e) {
+    console.log(e)
+    return false
+  }
+}
+
+export async function getAllMintedTokens() {
+  // @ts-ignore
+  const nftTokenActor = await window.ic.plug.createActor({
+    canisterId: nftCanisterId,
+    interfaceFactory: nftPartialInterfaceFactory,
+  })
+  const allTokens = await nftTokenActor.allMinted()
+  return allTokens
 }

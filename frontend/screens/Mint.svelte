@@ -22,6 +22,12 @@
     },
   }
 
+  let tokenId = ""
+
+  $: if (itemSets) {
+    tokenId = "" + itemSets.Eyes.selected + itemSets.Hands.selected
+  }
+
   function randomReset() {
     const updatedSet = { ...itemSets }
     for (const [group, details] of Object.entries(updatedSet)) {
@@ -61,10 +67,10 @@
           {backToDesigner}
           {updateScreen}
           {screens}
-          {itemSets}
+          {tokenId}
         />
       {:else}
-        <h1>Design your IC Battery</h1>
+        <h1 class="pink">Design your IC Battery</h1>
         <div class="buttons">
           <button id="reset" on:click={randomReset}>
             <Reset />
@@ -138,11 +144,5 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-column-gap: 40px;
-  }
-
-  h1 {
-    font-size: 30px;
-    color: #fa51d3;
-    text-transform: uppercase;
   }
 </style>

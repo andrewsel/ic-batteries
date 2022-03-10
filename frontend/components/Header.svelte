@@ -44,7 +44,7 @@
 <style lang="scss">
   header {
     background-color: black;
-    padding: 40px;
+    // padding: 40px;
     color: white;
     width: 100%;
     display: grid;

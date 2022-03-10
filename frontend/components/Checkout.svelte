@@ -9,7 +9,7 @@
   export let backToDesigner
   export let updateScreen
   export let screens
-  export let itemSets
+  export let tokenId
 
   const userStates = {
     NO_PLUG: "NO_PLUG",
@@ -33,7 +33,7 @@
   }
 
   function getTokenId() {
-    return "" + itemSets.Eyes.selected + itemSets.Hands.selected
+    return
   }
 
   async function handlePayAndMint() {
@@ -41,9 +41,11 @@
     if (tokensSent) {
       console.log("tokens sent, starting minting")
       try {
-        const tokenId = getTokenId()
-        console.log("minting" + tokenId)
-        nft.mint("http://localhost:3000/?tokenid=" + tokenId)
+        console.log("minting: " + tokenId)
+        await nft.mint(
+          parseInt(tokenId),
+          "http://localhost:3000/?tokenid=" + tokenId,
+        )
         userState = userStates.NFT_MINTED
       } catch (e) {
         console.log(e)

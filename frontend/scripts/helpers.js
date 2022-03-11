@@ -1,10 +1,10 @@
 export const bgUrl = {
-  1: "https://wo25k-iqaaa-aaaan-qacda-cai.raw.ic0.app/frontend/assets/stars.svg",
-  2: "https://wo25k-iqaaa-aaaan-qacda-cai.raw.ic0.app/frontend/assets/stars2.svg",
-  3: "https://wo25k-iqaaa-aaaan-qacda-cai.raw.ic0.app/frontend/assets/bubble.svg",
-  4: "https://wo25k-iqaaa-aaaan-qacda-cai.raw.ic0.app/frontend/assets/dots.svg",
-  5: "https://wo25k-iqaaa-aaaan-qacda-cai.raw.ic0.app/frontend/assets/waves.svg",
-  6: "https://wo25k-iqaaa-aaaan-qacda-cai.raw.ic0.app/frontend/assets/redsky.svg",
+  1: "https://res.cloudinary.com/andrewsel/image/upload/v1647001014/stars.svg",
+  2: "https://res.cloudinary.com/andrewsel/image/upload/v1647001014/stars2.svg",
+  3: "https://res.cloudinary.com/andrewsel/image/upload/v1647001014/bubble.svg",
+  4: "https://res.cloudinary.com/andrewsel/image/upload/v1647001014/dots.svg",
+  5: "https://res.cloudinary.com/andrewsel/image/upload/v1647001014/redsky.svg",
+  6: "https://res.cloudinary.com/andrewsel/image/upload/v1647001014/waves.svg",
 }
 
 export const colors = [

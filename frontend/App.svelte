@@ -26,7 +26,7 @@
     PROCESSING: "PROCESSING",
   }
 
-  let screen = screens.GALLERY
+  let screen = screens.MINT
   let principalId = ""
   let tokenId = ""
 
@@ -35,10 +35,7 @@
   }
 
   async function handleConnectPlug() {
-    const plugConnected = await connectPlug()
-    if (plugConnected) {
-      principalId = await getPrincipal()
-    }
+    principalId = await connectPlug()
   }
 
   function updateScreen(newScreen) {

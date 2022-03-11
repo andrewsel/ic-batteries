@@ -1,6 +1,6 @@
 // Canister Ids
 const bootcampCanisterId = "yeeiw-3qaaa-aaaah-qcvmq-cai"
-const nftCanisterId = "rkp4c-7iaaa-aaaaa-aaaca-cai"
+const nftCanisterId = "wj336-fiaaa-aaaan-qacdq-cai"
 
 // Whitelist
 const whitelist = [bootcampCanisterId, nftCanisterId]
@@ -12,21 +12,37 @@ export async function isWalletConnected() {
 
 export async function getPrincipal() {
   // @ts-ignore
-  const response = await window.ic.plug.agent.getPrincipal()
-  return response.toText()
+  await window.ic.plug.createAgent({ whitelist })
+  // @ts-ignore
+  const agent = window.ic.plug.agent
+  const principal = await agent.getPrincipal()
+  return principal.toText()
 }
 
 export async function connectPlug() {
-  try {
-    // @ts-ignore
-    const response = await window.ic.plug.requestConnect({
-      whitelist,
-    })
-    return true
-  } catch (e) {
-    console.log(e)
-    return false
+  // @ts-ignore
+  if (window.ic === undefined) {
+    window.open("https://plugwallet.ooo/", "_blank")?.focus()
+    return ""
   }
+
+  const connected = await isWalletConnected()
+
+  if (!connected) {
+    try {
+      // @ts-ignore
+      await window.ic.plug.requestConnect({
+        whitelist,
+      })
+    } catch (e) {
+      console.log(e)
+      return ""
+    }
+  }
+
+  const principalId = await getPrincipal()
+  console.log("Logged in as: " + principalId)
+  return principalId
 }
 
 const bootcampPartialInterfaceFactory = ({ IDL }) => {
@@ -89,38 +105,32 @@ export async function sendBootcampTokens() {
 }
 
 const nftPartialInterfaceFactory = ({ IDL }) => {
-  const BlockHeight = IDL.Nat64
   const NFTs = IDL.Vec(
     IDL.Record({
       tokenId: IDL.Nat,
       principalId: IDL.Text,
     }),
   )
-  const MintArgs = IDL.Record({
-    tokenId: IDL.Nat,
-    uri: IDL.Text,
-  })
+  const TokenId = IDL.Nat
+  const URI = IDL.Text
   return IDL.Service({
     allMinted: IDL.Func([], [NFTs], ["query"]),
-    mint: IDL.Func([MintArgs], [BlockHeight], []),
+    mint: IDL.Func([URI], [TokenId], []),
   })
 }
 
-export async function mint() {
+export async function mint(uri) {
   // @ts-ignore
   const nftTokenActor = await window.ic.plug.createActor({
     canisterId: nftCanisterId,
     interfaceFactory: nftPartialInterfaceFactory,
   })
   try {
-    await nftTokenActor.mint({
-      tokenId: 22,
-      uri: "http://localhost:3000?tokenid=22",
-    })
-    return true
+    const newTokenId = await nftTokenActor.mint(uri)
+    return newTokenId
   } catch (e) {
     console.log(e)
-    return false
+    return ""
   }
 }
 

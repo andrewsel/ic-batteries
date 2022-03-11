@@ -1,45 +1,31 @@
 <script>
   // @ts-ignore
-  // import { nft } from "canisters/nft"
-  import { getAllMintedTokens, mint } from "../scripts/plug.js"
+  import { nft } from "canisters/nft"
+  // import { getAllMintedTokens, mint } from "../scripts/plug.js"
   import { onMount } from "svelte"
 
   let nfts = []
 
   async function getNfts() {
     try {
-      nfts = await getAllMintedTokens() // nft.allMinted()
+      nfts = await nft.allMinted()
       console.log(nfts)
     } catch (e) {
       console.log(e)
     }
   }
 
-  async function mintNft() {
-    try {
-      const response = await mint()
-      console.log(response)
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
-  // onMount(getNfts)
+  onMount(getNfts)
 </script>
 
 <h1>Gallery</h1>
 
-<button on:click={getNfts}>GET NFTs</button>
-<button on:click={mintNft}>MINT NFT</button>
-
 <div class="grid">
   {#each nfts as nft}
-    {#if nft.tokenId > 10}
-      <div class="nft">
-        {nft.tokenId}
-        {nft.principalId}
-      </div>
-    {/if}
+    <div class="nft">
+      {nft.tokenId}
+      {nft.principalId}
+    </div>
   {/each}
 </div>
 

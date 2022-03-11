@@ -22,10 +22,10 @@
     },
   }
 
-  let tokenId = ""
+  let icBatteryId = ""
 
   $: if (itemSets) {
-    tokenId = "" + itemSets.Eyes.selected + itemSets.Hands.selected
+    icBatteryId = "" + itemSets.Eyes.selected + itemSets.Hands.selected
   }
 
   function randomReset() {
@@ -67,7 +67,7 @@
           {backToDesigner}
           {updateScreen}
           {screens}
-          {tokenId}
+          {icBatteryId}
         />
       {:else}
         <h1 class="pink">Design your IC Battery</h1>

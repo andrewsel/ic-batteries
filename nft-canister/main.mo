@@ -23,9 +23,10 @@ actor dip721 {
 
 	private type TokenAddress = Principal;
 	private type TokenId = Nat;
-  private type Owner = {
+  private type Token = {
     tokenId : TokenId;
     principalId : Text;
+    uri : ?Text;
   };
 
 	private stable var tokenPk : Nat = 0;
@@ -57,7 +58,7 @@ actor dip721 {
 		return _ownerOf(tokenId);
 	};
 
-  public shared query func allMinted() : async [Owner] {
+  public shared query func allMinted() : async [Token] {
 		return _allMinted();
 	};
 
@@ -134,9 +135,10 @@ actor dip721 {
 		_transfer(from, to, tokenId);
 	};
 
-	public shared(msg) func mint(tokenId : Nat, uri : Text) : async Nat {
-		_mint(msg.caller, tokenId, uri);
-		return tokenId;
+	public shared(msg) func mint(uri : Text) : async Nat {
+    tokenPk += 1;
+		_mint(msg.caller, tokenPk, uri);
+		return tokenPk;
 	};
 
 
@@ -146,14 +148,15 @@ actor dip721 {
 		return owners.get(tokenId);
 	};
 
-  private func _allMinted() : [Owner] {
-    var array : [Owner] = [];
+  private func _allMinted() : [Token] {
+    var array : [Token] = [];
     for ((key, value) in owners.entries()) {
-      let owner : Owner = {
+      let token : Token = {
         tokenId = key;
         principalId = Principal.toText(value);
+        uri = _tokenURI(key);
       };
-      array := Array.append(array, [owner]);
+      array := Array.append(array, [token]);
     };
 		return array;
 	};
@@ -253,7 +256,7 @@ actor dip721 {
 
 		_incrementBalance(to);
 		owners.put(tokenId, to);
-		tokenURIs.put(tokenId,uri);
+		tokenURIs.put(tokenId, uri);
 	};
 
 	private func _burn(tokenId : Nat) {

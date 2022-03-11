@@ -1,15 +1,13 @@
 <script>
   import { onMount } from "svelte"
-  import { sendBootcampTokens } from "../scripts/plug.js"
-  // @ts-ignore
-  import { nft } from "canisters/nft"
+  import { sendBootcampTokens, mint } from "../scripts/plug.js"
 
   export let handleConnectPlug
   export let principalId
   export let backToDesigner
   export let updateScreen
   export let screens
-  export let tokenId
+  export let icBatteryId
 
   const userStates = {
     NO_PLUG: "NO_PLUG",
@@ -32,20 +30,20 @@
     }
   }
 
-  function getTokenId() {
-    return
+  $: if (principalId && userState == userStates.PLUG_NOT_CONNECTED) {
+    userState = userStates.PLUG_CONNECTED
   }
 
   async function handlePayAndMint() {
-    const tokensSent = await sendBootcampTokens()
+    const tokensSent = true // await sendBootcampTokens()
     if (tokensSent) {
       console.log("tokens sent, starting minting")
       try {
-        console.log("minting: " + tokenId)
-        await nft.mint(
-          parseInt(tokenId),
-          "http://localhost:3000/?tokenid=" + tokenId,
+        const tokenId = await mint(
+          "https://wo25k-iqaaa-aaaan-qacda-cai.raw.ic0.app/?icbatteryid=" +
+            icBatteryId,
         )
+        console.log("Token Minted: " + tokenId)
         userState = userStates.NFT_MINTED
       } catch (e) {
         console.log(e)

@@ -26,9 +26,9 @@
     PROCESSING: "PROCESSING",
   }
 
-  let screen = screens.MINT
+  let screen = screens.HOME
   let principalId = ""
-  let tokenId = ""
+  let icBatteryId = ""
 
   async function setPrincipalId(id) {
     principalId = id
@@ -43,9 +43,9 @@
   }
 
   async function doOnMount() {
-    tokenId = getQueryParam("tokenid")
-    if (tokenId) {
-      console.log(tokenId)
+    icBatteryId = getQueryParam("icbatteryid")
+    if (icBatteryId) {
+      console.log(icBatteryId)
       screen = screens.NFT
     }
   }
@@ -54,7 +54,7 @@
 </script>
 
 {#if screen == screens.NFT}
-  <NFT {tokenId} />
+  <NFT {icBatteryId} />
 {:else}
   <div class="container">
     <Header

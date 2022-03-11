@@ -5,6 +5,11 @@
   export let numOptions
   export let selectedItem
   export let updateSelected
+  export let updateBodyColor
+  export let updateHeadColor
+  export let bodyColor
+  export let headColor
+  export let colors
 
   let expanded = false
 </script>
@@ -15,6 +20,27 @@
     <div class="caret">{expanded ? "▲" : "▼"}</div>
   </div>
   {#if expanded}
+    {#if groupName == "Body"}
+      <div class="items colors">
+        <p>Head Color</p>
+        {#each colors as color, i}
+          <div
+            on:click={() => updateHeadColor(i + 1)}
+            style="background-color: #{color}"
+            class={headColor == i + 1 ? "selected" : ""}
+          />
+        {/each}
+        <p>Body Color</p>
+        {#each colors as color, i}
+          <div
+            on:click={() => updateBodyColor(i + 1)}
+            style="background-color: #{color}"
+            class={bodyColor == i + 1 ? "selected" : ""}
+          />
+        {/each}
+        <p style="margin-bottom: -20px">Body style</p>
+      </div>
+    {/if}
     <div class="items">
       {#each Array(numOptions) as item, index}
         <div class="item" on:click={() => updateSelected(groupName, index + 1)}>
@@ -22,6 +48,9 @@
             itemSet={groupName}
             optionNumber={index + 1}
             selected={selectedItem == index + 1}
+            {headColor}
+            {bodyColor}
+            {colors}
           />
         </div>
       {/each}
@@ -60,7 +89,22 @@
     padding: 10px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-column-gap: 20px;
-    grid-row-gap: 20px;
+    grid-gap: 10px;
+    &.colors {
+      grid-template-columns: repeat(8, 1fr);
+      p {
+        grid-column: span 8;
+        margin-top: 10px;
+      }
+      div {
+        width: 100%;
+        height: 36px;
+        border-radius: 6px;
+        border: 3px solid transparent;
+        &.selected {
+          border-color: #74ff75;
+        }
+      }
+    }
   }
 </style>

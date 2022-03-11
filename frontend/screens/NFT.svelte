@@ -1,18 +1,14 @@
 <script>
-  import Body from "../components/battery-components/Body.svelte"
-  import Eyes from "../components/battery-components/Eyes.svelte"
-  import Hands from "../components/battery-components/Hands.svelte"
+  import Battery from "../components/battery-components/Battery.svelte"
+  import { colors } from "../scripts/helpers.js"
 
-  export let tokenId = ""
+  export let icBatteryId = ""
 
-  $: console.log(tokenId)
+  $: console.log(icBatteryId)
 </script>
 
 <div>
-  <Body>
-    <Eyes optionNumber={parseInt(tokenId[0])} />
-    <Hands optionNumber={parseInt(tokenId[1])} />
-  </Body>
+  <Battery designOptions={icBatteryId} />
 </div>
 
 <style lang="scss">

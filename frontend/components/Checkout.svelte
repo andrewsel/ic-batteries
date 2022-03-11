@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte"
   import { sendBootcampTokens, mint } from "../scripts/plug.js"
+  import Spinner from "./icons/Spin.svelte"
 
   export let handleConnectPlug
   export let principalId
@@ -17,6 +18,35 @@
   }
 
   let userState = userStates.NO_PLUG
+
+  let processing = false
+
+  const messages = [
+    "Processing payment...",
+    "Doing daily challenges...",
+    "Dreaming about Motoko...",
+    "Going down the IC rabbit hole...",
+    "Checking the Motoko docs...",
+    "Minting cool NFT...",
+    "Catching up on Discord...",
+    "Becoming an SVG wizard...",
+    "Watching Bootcamp lectures at 1.5x speed...",
+    "Joining the 8 year gang...",
+  ]
+  let message = messages[0]
+  let messageShowing = 0
+  let messageInterval
+  $: if (processing) {
+    if (!messageInterval) {
+      messageInterval = setInterval(() => {
+        messageShowing =
+          messageShowing == messages.length - 1 ? 0 : messageShowing + 1
+        message = messages[messageShowing]
+      }, 2500)
+    }
+  } else {
+    clearInterval(messageInterval)
+  }
 
   async function isPlugConnected() {
     // @ts-ignore
@@ -35,7 +65,8 @@
   }
 
   async function handlePayAndMint() {
-    const tokensSent = true // await sendBootcampTokens()
+    processing = true
+    const tokensSent = await sendBootcampTokens()
     if (tokensSent) {
       console.log("tokens sent, starting minting")
       try {
@@ -49,6 +80,7 @@
         console.log(e)
       }
     }
+    processing = false
   }
 
   async function handleConnectPlugClick() {
@@ -65,32 +97,54 @@
   onMount(doOnMount)
 </script>
 
-<section>
-  <h1>Mint your IC Battery</h1>
-  <div class="next-action">
-    {#if userState == userStates.NO_PLUG}
-      <p>To mint your NFT, you need to install plug 👇</p>
-      <button>Install Plug</button>
-    {:else if userState == userStates.PLUG_NOT_CONNECTED}
-      <button on:click={handleConnectPlugClick}>Connect Plug Wallet</button>
-    {:else if userState == userStates.PLUG_CONNECTED}
-      <p>🎉 Your plug wallet is connected</p>
-      <p>💰 Minting an IC Battery NFT costs 100 Bootcamp Tokens</p>
-      <button on:click={handlePayAndMint}> Pay 100 Tokens & Mint NFT </button>
-    {:else if userState == userStates.NFT_MINTED}
-      <p>🥳 You've minted a IC Batteries NFT</p>
-      <button on:click={() => updateScreen(screens.GALLERY)}>
-        View NFT in Gallery →
-      </button>
-    {:else}
-      Something went wrong...
-    {/if}
-
-    <p class="back" on:click={backToDesigner}>← Back to design</p>
+{#if processing}
+  <div class="processing">
+    <Spinner />
+    <p>
+      {message}
+    </p>
   </div>
-</section>
+{:else}
+  <section>
+    <h1>Mint your IC Battery</h1>
+    <div class="next-action">
+      {#if userState == userStates.NO_PLUG}
+        <p>To mint your NFT, you need to install plug 👇</p>
+        <button>Install Plug</button>
+      {:else if userState == userStates.PLUG_NOT_CONNECTED}
+        <button on:click={handleConnectPlugClick}>Connect Plug Wallet</button>
+      {:else if userState == userStates.PLUG_CONNECTED}
+        <p>🎉 Your plug wallet is connected</p>
+        <p>💰 Minting an IC Battery NFT costs 100 Bootcamp Tokens</p>
+        <button on:click={handlePayAndMint}> Pay 100 Tokens & Mint NFT </button>
+      {:else if userState == userStates.NFT_MINTED}
+        <p>🥳 You've minted an IC Batteries NFT</p>
+        <button on:click={() => updateScreen(screens.GALLERY)}>
+          View NFT in Gallery →
+        </button>
+      {:else}
+        Something went wrong...
+      {/if}
+
+      <p class="back" on:click={backToDesigner}>← Back to design</p>
+    </div>
+  </section>
+{/if}
 
 <style lang="scss">
+  .processing {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+  }
+
   .next-action {
     margin-top: 40px;
   }

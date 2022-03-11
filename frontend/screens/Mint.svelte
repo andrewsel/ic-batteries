@@ -1,8 +1,6 @@
 <script>
   import AccordianGroup from "../components/battery-components/AccordianGroup.svelte"
-  import Body from "../components/battery-components/Body.svelte"
-  import Eyes from "../components/battery-components/Eyes.svelte"
-  import Hands from "../components/battery-components/Hands.svelte"
+  import Battery from "../components/battery-components/Battery.svelte"
   import Reset from "../components/icons/reset.svelte"
   import Checkout from "../components/Checkout.svelte"
 
@@ -10,14 +8,29 @@
   export let principalId
   export let updateScreen
   export let screens
+  export let colors = []
 
   let itemSets = {
-    Eyes: {
+    Body: {
       numOptions: 3,
+      selected: 1,
+      headColor: 1,
+      bodyColor: 2,
+    },
+    Eyes: {
+      numOptions: 5,
+      selected: 1,
+    },
+    Mouth: {
+      numOptions: 5,
       selected: 1,
     },
     Hands: {
       numOptions: 3,
+      selected: 1,
+    },
+    Background: {
+      numOptions: 6,
       selected: 1,
     },
   }
@@ -25,7 +38,15 @@
   let icBatteryId = ""
 
   $: if (itemSets) {
-    icBatteryId = "" + itemSets.Eyes.selected + itemSets.Hands.selected
+    icBatteryId =
+      "" +
+      itemSets.Body.headColor +
+      itemSets.Body.bodyColor +
+      itemSets.Body.selected +
+      itemSets.Eyes.selected +
+      itemSets.Mouth.selected +
+      itemSets.Hands.selected +
+      itemSets.Background.selected
   }
 
   function randomReset() {
@@ -34,6 +55,8 @@
       updatedSet[group].selected = Math.floor(
         Math.random() * details.numOptions + 1,
       )
+      updatedSet.Body.headColor = Math.floor(Math.random() * 8 + 1)
+      updatedSet.Body.bodyColor = Math.floor(Math.random() * 8 + 1)
     }
     itemSets = { ...updatedSet }
   }
@@ -44,7 +67,19 @@
     itemSets = { ...updatedSet }
   }
 
-  let readyToMint = true
+  function updateBodyColor(col = 1) {
+    const updatedSet = { ...itemSets }
+    updatedSet.Body.bodyColor = col
+    itemSets = { ...updatedSet }
+  }
+
+  function updateHeadColor(col = 1) {
+    const updatedSet = { ...itemSets }
+    updatedSet.Body.headColor = col
+    itemSets = { ...updatedSet }
+  }
+
+  let readyToMint = false
 
   function backToDesigner() {
     readyToMint = false
@@ -54,10 +89,7 @@
 <div class="slim-container">
   <section>
     <div id="col1">
-      <Body>
-        <Eyes optionNumber={itemSets.Eyes.selected} />
-        <Hands optionNumber={itemSets.Hands.selected} />
-      </Body>
+      <Battery designOptions={icBatteryId} {colors} />
     </div>
     <div id="col2">
       {#if readyToMint}
@@ -88,6 +120,11 @@
               numOptions={itemSet[1].numOptions}
               selectedItem={itemSet[1].selected}
               {updateSelected}
+              {updateBodyColor}
+              {updateHeadColor}
+              bodyColor={itemSets.Body.bodyColor}
+              headColor={itemSets.Body.headColor}
+              {colors}
             />
           {/each}
         </div>

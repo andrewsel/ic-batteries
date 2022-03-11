@@ -23,18 +23,18 @@
     >
       Gallery
     </div>
-    <div
+    <!-- <div
       class="page-link {screen == screens.VIP ? 'selected' : ''}"
       on:click={() => updateScreen(screens.VIP)}
     >
       VIPs
-    </div>
-    <div
+    </div> -->
+    <!-- <div
       class="page-link {screen == screens.ABOUT ? 'selected' : ''}"
       on:click={() => updateScreen(screens.ABOUT)}
     >
       About
-    </div>
+    </div> -->
   </nav>
   <div class="login-info">
     <PlugButton {handleConnectPlug} {principalId} />

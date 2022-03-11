@@ -29,6 +29,14 @@ actor dip721 {
     uri : ?Text;
   };
 
+	// private var tokenPk : Nat = 0;
+
+	// private var tokenURIEntries : [(TokenId, Text)] = [];
+	// private var ownersEntries : [(TokenId, Principal)] = [];
+	// private var balancesEntries : [(Principal, Nat)] = [];
+	// private var tokenApprovalsEntries : [(TokenId, Principal)] = [];
+	// private var operatorApprovalsEntries : [(Principal, [Principal])] = [];
+
 	private stable var tokenPk : Nat = 0;
 
 	private stable var tokenURIEntries : [(TokenId, Text)] = [];
@@ -274,7 +282,6 @@ actor dip721 {
 		balancesEntries := Iter.toArray(balances.entries());
 		tokenApprovalsEntries := Iter.toArray(tokenApprovals.entries());
 		operatorApprovalsEntries := Iter.toArray(operatorApprovals.entries());
-
 	};
 
 	system func postupgrade() {

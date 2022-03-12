@@ -26,7 +26,7 @@
     PROCESSING: "PROCESSING",
   }
 
-  let screen = screens.VIP
+  let screen = screens.HOME
   let principalId = ""
   let icBatteryId = ""
 

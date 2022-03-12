@@ -112,10 +112,18 @@ const nftPartialInterfaceFactory = ({ IDL }) => {
     }),
   )
   const TokenId = IDL.Nat
+  const MessageId = IDL.Nat
   const URI = IDL.Text
+  const Room = IDL.Nat
+  const Message = IDL.Text
+  const MessageArgs = IDL.Record({
+    room: Room,
+    message: Message,
+  })
   return IDL.Service({
     allMinted: IDL.Func([], [NFTs], ["query"]),
     mint: IDL.Func([URI], [TokenId], []),
+    message: IDL.Func([MessageArgs], [MessageId], []),
   })
 }
 
@@ -128,6 +136,24 @@ export async function mint(uri) {
   try {
     const newTokenId = await nftTokenActor.mint(uri)
     return newTokenId
+  } catch (e) {
+    console.log(e)
+    return ""
+  }
+}
+
+export async function message(room, message) {
+  // @ts-ignore
+  const nftTokenActor = await window.ic.plug.createActor({
+    canisterId: nftCanisterId,
+    interfaceFactory: nftPartialInterfaceFactory,
+  })
+  try {
+    const messageId = await nftTokenActor.message({
+      room,
+      message,
+    })
+    return messageId
   } catch (e) {
     console.log(e)
     return ""

@@ -3,6 +3,8 @@
   import { nft } from "canisters/nft"
   import PlugButton from "../components/PlugButton.svelte"
   import { sampleNfts } from "../scripts/helpers.js"
+  import VipRoom from "../components/VipRoom.svelte"
+  import { onMount } from "svelte"
 
   export let handleConnectPlug
 
@@ -12,6 +14,7 @@
   let inRoom1 = false
   let inRoom2 = false
   let checking = false
+  let messages = []
 
   async function checkIfOnList(p) {
     try {
@@ -36,31 +39,43 @@
     }
   }
 
+  function leaveRoom() {
+    inRoom1 = false
+    inRoom2 = false
+  }
+
   $: if (principalId) {
     checkIfOnList(principalId)
   }
+
+  async function getMessages() {
+    messages = await nft.allMessages()
+    console.log(messages)
+  }
+
+  onMount(getMessages)
 </script>
 
 {#if inRoom1}
-  <div class="inside-room">
-    <h2>Welcome to Room 1</h2>
-    <img
-      src="https://media.giphy.com/media/hKYigb3Djp8pa/giphy.gif"
-      alt="Waynes World Backstage Pass"
-    />
-    <p on:click={() => (inRoom1 = false)}>Leave Room</p>
-  </div>
+  <VipRoom
+    room={1}
+    {leaveRoom}
+    {messages}
+    img={"https://media.giphy.com/media/hKYigb3Djp8pa/giphy.gif"}
+    imgAlt={"Waynes World Backstage Pass"}
+    {principalId}
+  />
 {/if}
 
 {#if inRoom2}
-  <div class="inside-room">
-    <h2>Welcome to Room 2</h2>
-    <img
-      src="https://media.giphy.com/media/k7vVF6G7AIeJgui8yF/giphy.gif"
-      alt="Waynes World Backstage Pass"
-    />
-    <p on:click={() => (inRoom2 = false)}>Leave Room</p>
-  </div>
+  <VipRoom
+    room={2}
+    {leaveRoom}
+    {messages}
+    img={"https://media.giphy.com/media/k7vVF6G7AIeJgui8yF/giphy.gif"}
+    imgAlt={"VIP gif"}
+    {principalId}
+  />
 {/if}
 
 <h1>VIP Rooms</h1>

@@ -1,6 +1,6 @@
 # IC BATTERIES
 
-This project was created by Andrew Sellen for the core project of Motoko Bootcamp.
+This project was created for the core project of Motoko Bootcamp.
 
 It's live on the Internet Computer [here](https://wo25k-iqaaa-aaaan-qacda-cai.raw.ic0.app/).
 

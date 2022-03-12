@@ -7,6 +7,8 @@ import Principal "mo:base/Principal";
 import Array "mo:base/Array";
 import Iter "mo:base/Iter";
 import P "mo:base/Prelude";
+import Char "mo:base/Char";
+import Text "mo:base/Text";
 
 actor dip721 {
 
@@ -19,32 +21,44 @@ actor dip721 {
 
 	stable var symbol_ : Text = "ICBT";
 
+
+
 	// Adapted from: https://github.com/SuddenlyHazel/DIP721/blob/main/src/DIP721/DIP721.mo
 
 	private type TokenAddress = Principal;
 	private type TokenId = Nat;
+  private type MessageId = Nat;
   private type Token = {
     tokenId : TokenId;
     principalId : Text;
     uri : ?Text;
   };
+  private type Message = {
+    principalId : Text;
+    room : Nat;
+    message : Text;
+  };
+  private type MessageWithKey = {
+    principalId : Text;
+    room : Nat;
+    message : Text;
+    messageId : Nat;
+  };
 
-	// private var tokenPk : Nat = 0;
-
-	// private var tokenURIEntries : [(TokenId, Text)] = [];
-	// private var ownersEntries : [(TokenId, Principal)] = [];
-	// private var balancesEntries : [(Principal, Nat)] = [];
-	// private var tokenApprovalsEntries : [(TokenId, Principal)] = [];
-	// private var operatorApprovalsEntries : [(Principal, [Principal])] = [];
 
 	private stable var tokenPk : Nat = 0;
+  private stable var messageId : Nat = 0;
+  private stable var nftsRemaining : Nat = 2000;
+  private stable var sunglassesRemaining : Nat = 100;
 
+  private stable var messagesEntries : [(MessageId, Message)] = [];
 	private stable var tokenURIEntries : [(TokenId, Text)] = [];
 	private stable var ownersEntries : [(TokenId, Principal)] = [];
 	private stable var balancesEntries : [(Principal, Nat)] = [];
 	private stable var tokenApprovalsEntries : [(TokenId, Principal)] = [];
 	private stable var operatorApprovalsEntries : [(Principal, [Principal])] = [];
 
+	private let messages : HashMap.HashMap<MessageId, Message> = HashMap.fromIter<MessageId, Message>(messagesEntries.vals(), 10, Nat.equal, Hash.hash);
 	private let tokenURIs : HashMap.HashMap<TokenId, Text> = HashMap.fromIter<TokenId, Text>(tokenURIEntries.vals(), 10, Nat.equal, Hash.hash);
 	private let owners : HashMap.HashMap<TokenId, Principal> = HashMap.fromIter<TokenId, Principal>(ownersEntries.vals(), 10, Nat.equal, Hash.hash);
 	private let balances : HashMap.HashMap<Principal, Nat> = HashMap.fromIter<Principal, Nat>(balancesEntries.vals(), 10, Principal.equal, Principal.hash);
@@ -70,8 +84,20 @@ actor dip721 {
 		return _allMinted();
 	};
 
+  public shared query func allMessages() : async [MessageWithKey] {
+		return _allMessages();
+	};
+
 	public shared query func tokenURI(tokenId : TokenId) : async ?Text {
 		return _tokenURI(tokenId);
+	};
+
+  public shared query func nftsLeft() : async Nat {
+		return nftsRemaining;
+	};
+
+  public shared query func sunglassesLeft() : async Nat {
+		return sunglassesRemaining;
 	};
 
 	public shared query func name() : async Text {
@@ -149,6 +175,12 @@ actor dip721 {
 		return tokenPk;
 	};
 
+  public shared(msg) func message(room : Nat, message : Text) : async Nat {
+    messageId += 1;
+		_message(msg.caller, room, message, messageId);
+    return messageId;
+	};
+
 
 	// Internal
 
@@ -165,6 +197,20 @@ actor dip721 {
         uri = _tokenURI(key);
       };
       array := Array.append(array, [token]);
+    };
+		return array;
+	};
+
+  private func _allMessages() : [MessageWithKey] {
+    var array : [MessageWithKey] = [];
+    for ((key, value) in messages.entries()) {
+      let messageObject : MessageWithKey = {
+        principalId = value.principalId;
+        message = value.message;
+        room = value.room;
+        messageId = key;
+      };
+      array := Array.append(array, [messageObject]);
     };
 		return array;
 	};
@@ -263,9 +309,32 @@ actor dip721 {
 		assert not _exists(tokenId);
 
 		_incrementBalance(to);
+    nftsRemaining := nftsRemaining - 1;
+    var i = 0;
+    for (letter in Text.toIter(uri)) {
+      if (i == 64) {
+        let letterText : Text = Char.toText(letter);
+        if (letterText == "3") {
+          sunglassesRemaining := sunglassesRemaining - 1;
+        };
+      };
+      i += 1;
+    };
 		owners.put(tokenId, to);
 		tokenURIs.put(tokenId, uri);
 	};
+
+  private func _message(principal : Principal, room : Nat, message : Text, messageId : Nat) : () {
+    assert not _exists(messageId);
+
+    let messageObject : Message = {
+      principalId = Principal.toText(principal);
+      room = room;
+      message = message;
+    };
+
+    messages.put(messageId, messageObject);
+  };
 
 	private func _burn(tokenId : Nat) {
 		let owner = _unwrap(_ownerOf(tokenId));
@@ -277,6 +346,7 @@ actor dip721 {
 	};
 
 	system func preupgrade() {
+    messagesEntries := Iter.toArray(messages.entries());
 		tokenURIEntries := Iter.toArray(tokenURIs.entries());
 		ownersEntries := Iter.toArray(owners.entries());
 		balancesEntries := Iter.toArray(balances.entries());
@@ -285,6 +355,7 @@ actor dip721 {
 	};
 
 	system func postupgrade() {
+    messagesEntries := [];
 		tokenURIEntries := [];
 		ownersEntries := [];
 		balancesEntries := [];

@@ -10,6 +10,7 @@
   export let updateHeadColor
   export let bodyColor
   export let headColor
+  export let sunglassesLeft = -1
 
   let expanded = false
 </script>
@@ -52,6 +53,11 @@
             {bodyColor}
             {colors}
           />
+          {#if groupName == "Eyes" && index == 2 && sunglassesLeft > -1}
+            <div class="sunglasses">
+              <strong>{sunglassesLeft}</strong> remaining
+            </div>
+          {/if}
         </div>
       {/each}
     </div>
@@ -59,6 +65,12 @@
 </article>
 
 <style lang="scss">
+  .sunglasses {
+    text-align: center;
+    margin-top: -40px;
+    font-size: 14px;
+  }
+
   article {
     border: 1px solid white;
     margin-bottom: 10px;

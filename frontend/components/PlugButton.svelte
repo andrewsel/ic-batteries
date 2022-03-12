@@ -12,7 +12,7 @@
     {#if principalId}
       <p>
         Connected<span class="mobile-hide">
-          &nbsp;as <span>{principalId.slice(0, 11)}...</span></span
+          &nbsp;as <span id="pid">{principalId.slice(0, 11)}...</span></span
         >
       </p>
     {:else}
@@ -36,7 +36,7 @@
 
   div {
     margin-left: 10px;
-    span {
+    span#id {
       color: #aaaaaa;
     }
   }

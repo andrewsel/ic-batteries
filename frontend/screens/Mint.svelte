@@ -1,4 +1,8 @@
 <script>
+  import { onMount } from "svelte"
+
+  // @ts-ignore
+  import { nft } from "canisters/nft"
   import AccordianGroup from "../components/battery-components/AccordianGroup.svelte"
   import Battery from "../components/battery-components/Battery.svelte"
   import Reset from "../components/icons/reset.svelte"
@@ -8,7 +12,9 @@
   export let principalId
   export let updateScreen
   export let screens
-  export let colors = []
+
+  let nftsLeft
+  let sunglassesLeft
 
   let itemSets = {
     Body: {
@@ -49,6 +55,15 @@
       itemSets.Background.selected
   }
 
+  async function getRemaining() {
+    try {
+      nftsLeft = await nft.nftsLeft()
+      sunglassesLeft = await nft.sunglassesLeft()
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   function randomReset() {
     const updatedSet = { ...itemSets }
     for (const [group, details] of Object.entries(updatedSet)) {
@@ -84,6 +99,8 @@
   function backToDesigner() {
     readyToMint = false
   }
+
+  onMount(getRemaining)
 </script>
 
 <div class="slim-container">
@@ -103,6 +120,7 @@
         />
       {:else}
         <h1 class="pink">Design your IC Battery</h1>
+        <p><strong>{nftsLeft}</strong>/2000 IC Batteries remaining</p>
         <div class="buttons">
           <button id="reset" on:click={randomReset}>
             <Reset />
@@ -124,6 +142,7 @@
               {updateHeadColor}
               bodyColor={itemSets.Body.bodyColor}
               headColor={itemSets.Body.headColor}
+              {sunglassesLeft}
             />
           {/each}
         </div>

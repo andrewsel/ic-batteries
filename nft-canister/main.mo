@@ -38,6 +38,10 @@ actor dip721 {
     room : Nat;
     message : Text;
   };
+  private type MessageObject = {
+    room : Nat;
+    message : Text;
+  };
   private type MessageWithKey = {
     principalId : Text;
     room : Nat;
@@ -45,6 +49,18 @@ actor dip721 {
     messageId : Nat;
   };
 
+
+	// private var tokenPk : Nat = 0;
+  // private var messageId : Nat = 0;
+  // private var nftsRemaining : Nat = 2000;
+  // private var sunglassesRemaining : Nat = 100;
+
+  // private var messagesEntries : [(MessageId, Message)] = [];
+	// private var tokenURIEntries : [(TokenId, Text)] = [];
+	// private var ownersEntries : [(TokenId, Principal)] = [];
+	// private var balancesEntries : [(Principal, Nat)] = [];
+	// private var tokenApprovalsEntries : [(TokenId, Principal)] = [];
+	// private var operatorApprovalsEntries : [(Principal, [Principal])] = [];
 
 	private stable var tokenPk : Nat = 0;
   private stable var messageId : Nat = 0;
@@ -175,9 +191,9 @@ actor dip721 {
 		return tokenPk;
 	};
 
-  public shared(msg) func message(room : Nat, message : Text) : async Nat {
+  public shared(msg) func message(messageObj : MessageObject) : async Nat {
     messageId += 1;
-		_message(msg.caller, room, message, messageId);
+		_message(msg.caller, messageObj.room, messageObj.message, messageId);
     return messageId;
 	};
 
@@ -325,7 +341,6 @@ actor dip721 {
 	};
 
   private func _message(principal : Principal, room : Nat, message : Text, messageId : Nat) : () {
-    assert not _exists(messageId);
 
     let messageObject : Message = {
       principalId = Principal.toText(principal);

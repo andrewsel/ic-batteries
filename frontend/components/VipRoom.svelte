@@ -16,15 +16,17 @@
         roomArr.push(m)
       }
     })
-    filteredMessages = roomArr.slice(roomArr.length - 4, roomArr.length - 1)
+    filteredMessages = roomArr
+    console.log(filteredMessages)
   }
 
   let newMessage = ""
 
   async function sendMessage() {
-    filteredMessages = [
-      ...filteredMessages,
+    messages = [
+      ...messages,
       {
+        room,
         message: newMessage,
         principalId,
       },

@@ -12,7 +12,7 @@
 
   <h2>Project features</h2>
 
-  <p>🔌 Plug login</p>
+  <p>🔌 Connect a Plug Wallet</p>
   <p>🎨 Design your own battery with 86,400 possible combinations</p>
   <p>💰 Payment processing (of Bootcamp Tokens)</p>
   <p>😍 View a minted NFT</p>

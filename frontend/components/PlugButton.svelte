@@ -36,7 +36,7 @@
 
   div {
     margin-left: 10px;
-    span#id {
+    span#pid {
       color: #aaaaaa;
     }
   }

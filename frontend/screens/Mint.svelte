@@ -89,7 +89,7 @@
 <div class="slim-container">
   <section>
     <div id="col1">
-      <Battery designOptions={icBatteryId} {colors} />
+      <Battery designOptions={icBatteryId} />
     </div>
     <div id="col2">
       {#if readyToMint}
@@ -124,7 +124,6 @@
               {updateHeadColor}
               bodyColor={itemSets.Body.bodyColor}
               headColor={itemSets.Body.headColor}
-              {colors}
             />
           {/each}
         </div>
@@ -143,7 +142,7 @@
   .buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-column-gap: 20px;
+    grid-gap: 20px;
     margin: 30px 0 40px 0;
   }
 
@@ -181,5 +180,22 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-column-gap: 40px;
+  }
+
+  @media (max-width: 900px) {
+    h1 {
+      font-size: 20px;
+    }
+
+    .buttons {
+      grid-template-columns: 100%;
+    }
+  }
+
+  @media (max-width: 680px) {
+    section {
+      grid-template-columns: 1fr 2fr;
+      grid-column-gap: 20px;
+    }
   }
 </style>

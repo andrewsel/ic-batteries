@@ -10,9 +10,13 @@
 
   <div>
     {#if principalId}
-      Connected as <span>{principalId.slice(0, 11)}...</span>
+      <p>
+        Connected<span class="mobile-hide">
+          &nbsp;as <span>{principalId.slice(0, 11)}...</span></span
+        >
+      </p>
     {:else}
-      Connect plug wallet
+      Connect<span class="mobile-hide">&nbsp;plug wallet</span>
     {/if}
   </div>
 </button>
@@ -34,6 +38,12 @@
     margin-left: 10px;
     span {
       color: #aaaaaa;
+    }
+  }
+
+  @media (max-width: 1190px) {
+    .mobile-hide {
+      display: none;
     }
   }
 </style>

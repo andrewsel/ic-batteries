@@ -1,5 +1,6 @@
 <script>
   import AccordianItem from "./AccordianItem.svelte"
+  import { colors } from "../../scripts/helpers.js"
 
   export let groupName
   export let numOptions
@@ -9,7 +10,6 @@
   export let updateHeadColor
   export let bodyColor
   export let headColor
-  export let colors
 
   let expanded = false
 </script>

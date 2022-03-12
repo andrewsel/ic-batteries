@@ -26,7 +26,7 @@
 
 <style lang="scss">
   .battery-set {
-    width: 80%;
+    width: 80vw;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -51,7 +51,7 @@
   }
 
   section {
-    padding: 0 40px;
+    padding: 0;
     color: white;
     display: flex;
     flex-direction: column;
@@ -85,6 +85,37 @@
     padding: 12px 20px;
     &:hover {
       cursor: pointer;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .battery {
+      width: 40vw;
+
+      &.left {
+        margin-right: -30vw;
+      }
+
+      &.middle {
+        width: 50vw;
+        z-index: 2;
+      }
+
+      &.right {
+        margin-left: -30vw;
+      }
+    }
+  }
+
+  @media (max-width: 600px) {
+    section {
+      width: 100%;
+      margin-top: -40px;
+    }
+
+    button {
+      width: 100%;
+      font-size: 20px;
     }
   }
 </style>

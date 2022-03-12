@@ -9,7 +9,10 @@
 </script>
 
 <header>
-  <Logo {screens} {updateScreen} />
+  <div class="logo">
+    <Logo {screens} {updateScreen} />
+  </div>
+
   <nav>
     <div
       class="page-link {screen == screens.MINT ? 'selected' : ''}"
@@ -23,18 +26,18 @@
     >
       Gallery
     </div>
-    <!-- <div
+    <div
       class="page-link {screen == screens.VIP ? 'selected' : ''}"
       on:click={() => updateScreen(screens.VIP)}
     >
       VIPs
-    </div> -->
-    <!-- <div
+    </div>
+    <div
       class="page-link {screen == screens.ABOUT ? 'selected' : ''}"
       on:click={() => updateScreen(screens.ABOUT)}
     >
       About
-    </div> -->
+    </div>
   </nav>
   <div class="login-info">
     <PlugButton {handleConnectPlug} {principalId} />
@@ -44,7 +47,6 @@
 <style lang="scss">
   header {
     background-color: black;
-    // padding: 40px;
     color: white;
     width: 100%;
     display: grid;
@@ -80,5 +82,22 @@
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
+  }
+
+  @media (max-width: 1000px) {
+    header {
+      grid-template-columns: 100%;
+    }
+
+    .login-info {
+      display: none;
+    }
+
+    .logo {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
   }
 </style>

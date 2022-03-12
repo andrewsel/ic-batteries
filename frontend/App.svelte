@@ -26,7 +26,7 @@
     PROCESSING: "PROCESSING",
   }
 
-  let screen = screens.HOME
+  let screen = screens.VIP
   let principalId = ""
   let icBatteryId = ""
 
@@ -70,9 +70,9 @@
       {:else if screen == screens.MINT}
         <Mint {handleConnectPlug} {principalId} {updateScreen} {screens} />
       {:else if screen == screens.GALLERY}
-        <Gallery />
+        <Gallery {handleConnectPlug} {principalId} />
       {:else if screen == screens.VIP}
-        <Vips />
+        <Vips {handleConnectPlug} {principalId} />
       {:else if screen == screens.ABOUT}
         <About />
       {:else}

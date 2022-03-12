@@ -183,4 +183,10 @@
       text-decoration: underline;
     }
   }
+
+  @media (max-width: 800px) {
+    button {
+      font-size: 20px;
+    }
+  }
 </style>

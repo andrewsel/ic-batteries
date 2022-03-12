@@ -17,3 +17,30 @@ export const colors = [
   "777777",
   "BBBBBB",
 ]
+
+export const sampleNfts = [
+  {
+    principalId:
+      "pksn4-amd7s-fbiqx-qql5y-dz625-cxhpv-jsguj-b6h3z-5wlb2-b5ho4-nae",
+    tokenId: 1,
+    uri: [
+      "https://wo25k-iqaaa-aaaan-qacda-cai.raw.ic0.app/?icbatteryid=1633225",
+    ],
+  },
+  {
+    principalId:
+      "akjhf8-amd7s-fbiqx-qql5y-dz625-cxhpv-jsguj-b6h3z-5wlb2-b5ho4-nae",
+    tokenId: 2,
+    uri: [
+      "https://wo25k-iqaaa-aaaan-qacda-cai.raw.ic0.app/?icbatteryid=7435412",
+    ],
+  },
+  {
+    principalId:
+      "pksn4-amd7s-fbiqx-qql5y-dz625-cxhpv-jsguj-b6h3z-5wlb2-b5ho4-nae",
+    tokenId: 3,
+    uri: [
+      "https://wo25k-iqaaa-aaaan-qacda-cai.raw.ic0.app/?icbatteryid=2212414",
+    ],
+  },
+]

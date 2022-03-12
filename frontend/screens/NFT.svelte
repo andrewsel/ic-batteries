@@ -1,6 +1,5 @@
 <script>
   import Battery from "../components/battery-components/Battery.svelte"
-  import { colors } from "../scripts/helpers.js"
 
   export let icBatteryId = ""
 

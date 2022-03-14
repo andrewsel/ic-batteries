@@ -3,11 +3,27 @@
 
   <p>
     This project was created by
-    <a href="https://andrewsel.com/">Andrew Sellen</a>
+    <a href="https://twitter.com/andrewsel">@andrewsel</a>
     for the core project of
     <a href="https://www.dfinitycommunity.com/motoko-bootcamp/">
-      Motoko Bootcamp.
-    </a>
+      Motoko Bootcamp
+    </a>.
+  </p>
+
+  <p>
+    Deployed on the
+    <a href="https://dfinity.org/">Internet Computer</a>
+    , and built using
+    <a href="https://smartcontracts.org/docs/language-guide/motoko.html"
+      >Motoko</a
+    >
+    and
+    <a href="https://svelte.dev/">Svelte</a>.
+  </p>
+
+  <p>
+    The <a href="https://github.com/andrewsel/ic-batteries">repo</a> is public on
+    Github.
   </p>
 
   <h2>Project features</h2>

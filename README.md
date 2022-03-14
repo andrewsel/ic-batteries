@@ -1,8 +1,10 @@
 # IC BATTERIES
 
-This project was created for the core project of Motoko Bootcamp.
+This project was created by [@andrewsel] for the core project of [Motoko Bootcamp](https://www.dfinitycommunity.com/motoko-bootcamp)/.
 
-It's live on the Internet Computer [here](https://wo25k-iqaaa-aaaan-qacda-cai.raw.ic0.app/).
+It's live on the [Internet Computer](https://dfinity.org/), [here](https://wo25k-iqaaa-aaaan-qacda-cai.raw.ic0.app/).
+
+Built using [Motoko](https://smartcontracts.org/docs/language-guide/motoko.html) and [Svelte](https://svelte.dev/).
 
 ## Project features
 

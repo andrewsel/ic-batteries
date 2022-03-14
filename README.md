@@ -1,6 +1,6 @@
 # IC BATTERIES
 
-This project was created by [@andrewsel](https://twitter.com/andrewsel) for the core project of [Motoko Bootcamp](https://www.dfinitycommunity.com/motoko-bootcamp)/.
+This project was created by [@andrewsel](https://twitter.com/andrewsel) for the core project of [Motoko Bootcamp](https://www.dfinitycommunity.com/motoko-bootcamp).
 
 It's live on the [Internet Computer](https://dfinity.org/), [here](https://wo25k-iqaaa-aaaan-qacda-cai.raw.ic0.app/).
 
